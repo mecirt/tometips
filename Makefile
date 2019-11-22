@@ -4,7 +4,7 @@ LUA := luajit
 
 TOME_GIT_URL := http://git.net-core.org/tome/t-engine4.git
 
-RELEASE_VERSIONS := 1.4.9 1.5.9 1.6.0
+RELEASE_VERSIONS := 1.4.9 1.5.9 1.6.0 1.6.1
 VERSIONS := $(RELEASE_VERSIONS)
 
 # GitHub Pages output
@@ -34,6 +34,7 @@ clean-all: clean
 publish:
 	test -d $(PAGES_OUTPUT)
 	rsync --recursive --times --exclude=*.handlebars --exclude=*.swp --delete --verbose html/* $(PAGES_OUTPUT)
+	echo Updated the directory at $(PAGES_OUTPUT), remember to git commit/push from there to load changes live.
 
 # Changes from one version to the next
 changes.mk: Makefile scripts/make-changes-mk.sh

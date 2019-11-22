@@ -479,8 +479,8 @@ var versions = (function() {
     }
 
     var versions = {
-        DEFAULT: '1.6.0',
-        ALL: [ '1.4.9', '1.5.9', '1.6.0' ],
+        DEFAULT: '1.6.1',
+        ALL: [ '1.4.9', '1.5.9', '1.6.0', '1.6.1' ],
         DISPLAY: { 'master': 'next' },
 
         name: function(ver) {
@@ -575,7 +575,7 @@ var masteries = (function() {
 
     var masteries = {
         DEFAULT: '1.3',
-        ALL: [ '0.8', '1.0', '1.1', '1.2', '1.3', '1.5' ],
+        ALL: [ '0.8', '1.0', '1.1', '1.2', '1.3', '1.5', '1.6' ],
 
         name: function(ver) {
             return ver;

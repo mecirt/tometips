@@ -127,13 +127,7 @@ end
 changes = { talents = {} }
 
 local talent_keys = { 'info_text', 'cooldown', 'mode', 'cost', 'range', 'use_speed', 'require' }
-
--- 1.3 changes how use speed is displayed (from "1 turn" to "Weapon", "Spell", etc.)
 local ignore_talent_keys = {}
-if from_version == '1.2.5' and to_version == '1.3.0' then
-    print("Ignoring use_speed")
-    ignore_talent_keys.use_speed = true
-end
 
 function talentsMatch(from, to)
     for i = 1, #talent_keys do

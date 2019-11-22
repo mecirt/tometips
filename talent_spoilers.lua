@@ -4,7 +4,7 @@ json = require 'lib.json4lua.json.json'
 local Actor = require 'mod.class.Actor'
 local ActorTalents = require 'engine.interface.ActorTalents'
 
-masteries = { 0.8, 1.0, 1.1, 1.2, 1.3, 1.5 }
+masteries = { 0.8, 1.0, 1.1, 1.2, 1.3, 1.5, 1.6 }
 -- masteries = { 1.3 }
 
 spoilers = {
