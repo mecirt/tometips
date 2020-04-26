@@ -47,8 +47,14 @@ fs = {
 -- rng functions.  Shouldn't be needed (descriptions should be static), but
 -- bugs and exceptions exist.
 rng = {
-    percent = function(chance) tip.util.logError('bad function rng.percent called') return false end,
-    avg = function(min, max, size) tip.util.logError('bad function rng.avg called') return (min + max) / 2 end,
+    percent = function(chance)
+        -- tip.util.logError('bad function rng.percent called')
+        return false
+    end,
+    avg = function(min, max, size)
+        -- tip.util.logError('bad function rng.avg called')
+        return (min + max) / 2
+    end,
 }
 
 game = {
@@ -224,6 +230,8 @@ dofile("/data/factions.lua")
 
 -- Birther descriptor - copied from ToME's load.lua
 Birther:loadDefinition("/data/birth/descriptors.lua")
+
+game.isCampaign = function(t) return false end
 
 -- Hook the T-Engine's various new... functions to track where items are from
 local function hookNew(module, name)

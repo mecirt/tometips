@@ -285,11 +285,9 @@ end
 
 player.combatPhysicalpower = function(self, mod, weapon, add)
     mod = mod or 1
-    if add then
-        tip.util.logError("Unsupported add to combatPhysicalpower")
-    end
+    add = add or 0
     spoilers.used.physicalpower = true
-    return spoilers.active.stat_power * mod
+    return spoilers.active.stat_power * mod + add
 end
 
 player.combatSpellpower = function(self, mod, add)
@@ -574,6 +572,10 @@ for i,mastery in ipairs(masteries) do
             player.inven[player.INVEN_MAINHAND][1] = { combat = { range=spoilers.active._archery_range }, archery = 'sling', archery_kind = 'sling' }
             player.inven[player.INVEN_QUIVER][1] = { combat = {}, archery_ammo = 'sling' }
         end
+
+        if t.getDuration and not t.getDur then
+            t.getDur = t.getDuration
+         end
 
         -- Beginning of info text.  This is a bit complicated.
         local info_text = {}
