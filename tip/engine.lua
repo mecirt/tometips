@@ -51,6 +51,10 @@ rng = {
         -- tip.util.logError('bad function rng.percent called')
         return false
     end,
+    float = function(min, max)
+        -- tip.util.logError('bad function rng.float called')
+        return (min + max) / 2
+    end,
     avg = function(min, max, size)
         -- tip.util.logError('bad function rng.avg called')
         return (min + max) / 2
@@ -113,6 +117,19 @@ dofile = function(file)
     return old_dofile(tip.version .. file)
 end
 
+function _t(s, tag)
+        if not s then
+                return nil
+        end
+        return s
+end
+
+function string.tformat(s, ...)
+  return s:format(...)
+end
+
+
+
 require 'engine.dialogs.Chat'
 
 require 'engine.utils'
@@ -161,6 +178,7 @@ resolvers = {
     attachtinkerbirth = function() end,
     birth_extra_tier1_zone = function() end,
     auto_equip_filters = function() end,
+    for_campaign = function() end,
 }
 
 config.settings.tome = {}
@@ -337,4 +355,5 @@ if not table.mapv then
         return result
     end
 end
+
 
