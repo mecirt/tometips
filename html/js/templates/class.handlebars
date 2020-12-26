@@ -41,5 +41,16 @@
             {{$ 'class_talents' talents_types=talents_types_class title='Class Talents' css_class='class-talents' }}
             {{$ 'class_talents' talents_types=talents_types_generic title='Generic Talents' css_class='generic-talents' }}
         </div>
+        {{#if evolutions}}
+            <h3>{{toTitleCase display_name}} - Evolutions</h3>
+            {{#each evolutions}}
+                <h4>{{{name}}}</h4>
+                <div class="class-desc well">{{{desc}}}</div>
+                <div class="class-detail-container container-fluid">
+                    {{$ 'class_talents' talents_types=class_talents title='Class Talents' css_class='class-talents' }}
+                    {{$ 'class_talents' talents_types=generic_talents title='Generic Talents' css_class='generic-talents' }}
+                </div>
+            {{/each}}
+        {{/if}}
     {{/each}}
 </div>

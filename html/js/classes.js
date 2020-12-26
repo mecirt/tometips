@@ -48,8 +48,15 @@ function fillClassTalents(tome, cls) {
     }
 
     for (var i = 0; i < subclasses.length; i++) {
-        _.each(subclasses[i].talents_types_class, list_class_talents);
-        _.each(subclasses[i].talents_types_generic, list_class_talents);
+        var sc = subclasses[i];
+        _.each(sc.talents_types_class, list_class_talents);
+        _.each(sc.talents_types_generic, list_class_talents);
+        if (sc.evolutions) {
+            for (var j = 0; j < sc.evolutions.length; ++j) {
+                _.each(sc.evolutions[j].class_talents, list_class_talents);
+                _.each(sc.evolutions[j].generic_talents, list_class_talents);    
+            }
+        }
     }
 
     _.each(load_talents, function(talents, category, list) {

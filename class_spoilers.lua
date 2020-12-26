@@ -58,6 +58,15 @@ function birtherDescToHtml(desc)
     return tip.util.tstringToHtml(string.toTString(desc))
 end
 
+-- grab a list of evolutions
+local evolutions = {}
+for tid, t in pairs(Actor.talents_def) do
+    if t.is_class_evolution then
+        evolutions[tid] = t
+    end
+end
+
+
 local classes = {}
 local class_list = {}
 for i, cls in ipairs(Birther.birth_descriptor_def.class) do
@@ -88,7 +97,7 @@ for i, sub in ipairs(Birther.birth_descriptor_def.subclass) do
         local talents_types_class = {}
         local talents_types_generic = {}
 
-        local check_talents_types = function(talents_types, unlockable)
+        local check_talents_types = function(talents_types, unlockable, class_talents, generic_talents)
             if type(talents_types) == 'table' then
                 for k, v in pairs(talents_types) do
                     -- This "if" is necessary to handle unimplemented or nonexistent talents (!?)
@@ -96,6 +105,7 @@ for i, sub in ipairs(Birther.birth_descriptor_def.subclass) do
                         -- Our output is the same as the array used by ToME, with
                         -- the following modifications:
                         --
+                        -- index 1 is 'locked'
                         -- Make masteries 1-based
                         v[2] = v[2] + 1.0
                         -- Add talent type name
@@ -104,17 +114,32 @@ for i, sub in ipairs(Birther.birth_descriptor_def.subclass) do
                         v[4] = unlockable
 
                         if Actor.talents_types_def[k].generic then
-                            talents_types_generic[k] = v
+                            generic_talents[k] = v
                         else
-                            talents_types_class[k] = v
+                            class_talents[k] = v
                         end
                     end
                 end
             end
         end
 
-        check_talents_types(sub.talents_types)
-        check_talents_types(sub.unlockable_talents_types, true)
+        check_talents_types(sub.talents_types, false, talents_types_class, talents_types_generic)
+        check_talents_types(sub.unlockable_talents_types, true, talents_types_class, talents_types_generic)
+
+        evo_list = {}
+        for tid, t in pairs(evolutions) do
+            if t.is_class_evolution == sub.name then
+                evo = {}
+                evo.name = tip.util.tstringToHtml(string.toTString(t.name))
+                evo.desc = tip.util.tstringToHtml(string.toTString(t.info()))
+                evo.class_talents = {}
+                evo.generic_talents = {}
+                -- TODO: fill in the evolution skills! For this, we'll need to execute the onlearn script and capture the changes
+                evo_talents = {}
+                check_talents_types(evo_talents, false, evo.class_talents, evo.generic_talents)
+                table.insert(evo_list, evo)
+            end
+        end
 
         subclasses[sub.short_name] = {
             name = sub.name,
@@ -126,6 +151,7 @@ for i, sub in ipairs(Birther.birth_descriptor_def.subclass) do
             talents_types_class = talents_types_class,
             talents_types_generic = talents_types_generic,
             talents = sub.talents,
+            evolutions = evo_list,
             copy_add = sub.copy_add,
             _dlc = sub._dlc,
             _dlc_name = sub._dlc and tip.dlc[sub._dlc].long_name or nil,
