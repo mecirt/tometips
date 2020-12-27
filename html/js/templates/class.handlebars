@@ -46,6 +46,13 @@
             {{#each evolutions}}
                 <h4>{{{name}}}</h4>
                 <div class="class-desc well">{{{desc}}}</div>
+                {{#if removes}}
+                    <div class="class_evolution_removes">
+                    {{#each removes}}
+                        <div class="class_evolution_remove"><span style="color: #dc143c">Removes</span> <a href="#talents/{{toUnsafeHtmlId @key}}{{currentQuery}}">{{toTitleCase this}}</a></div>
+                    {{/each}}
+                    </div>
+                {{/if}}
                 <div class="class-detail-container container-fluid">
                     {{$ 'class_talents' talents_types=class_talents title='Class Talents' css_class='class-talents' }}
                     {{$ 'class_talents' talents_types=generic_talents title='Generic Talents' css_class='generic-talents' }}

@@ -250,6 +250,9 @@ dofile("/data/factions.lua")
 Birther:loadDefinition("/data/birth/descriptors.lua")
 
 game.isCampaign = function(t) return false end
+game.bignews = { 
+  say = function() end,
+}
 
 -- Hook the T-Engine's various new... functions to track where items are from
 local function hookNew(module, name)

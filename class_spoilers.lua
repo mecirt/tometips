@@ -105,7 +105,7 @@ for i, sub in ipairs(Birther.birth_descriptor_def.subclass) do
                         -- Our output is the same as the array used by ToME, with
                         -- the following modifications:
                         --
-                        -- index 1 is 'locked'
+                        -- index 1 is 'unlocked'
                         -- Make masteries 1-based
                         v[2] = v[2] + 1.0
                         -- Add talent type name
@@ -126,6 +126,7 @@ for i, sub in ipairs(Birther.birth_descriptor_def.subclass) do
         check_talents_types(sub.talents_types, false, talents_types_class, talents_types_generic)
         check_talents_types(sub.unlockable_talents_types, true, talents_types_class, talents_types_generic)
 
+        game.party.hasMember = function() return true end  -- needed for evolutions
         evo_list = {}
         for tid, t in pairs(evolutions) do
             if t.is_class_evolution == sub.name then
@@ -134,12 +135,56 @@ for i, sub in ipairs(Birther.birth_descriptor_def.subclass) do
                 evo.desc = tip.util.tstringToHtml(string.toTString(t.info()))
                 evo.class_talents = {}
                 evo.generic_talents = {}
-                -- TODO: fill in the evolution skills! For this, we'll need to execute the onlearn script and capture the changes
+
+                -- Fill in the evolution skills! For this, we'll need to execute the onlearn script and capture the changes
+                -- This is very hacky ...
                 evo_talents = {}
+                evo.removes = {}
+                falset = {}
+                falset.attr = function() end
+                falset.descriptor = {}
+                falset.talents = {}
+                falset.learnTalentType = function(self, tname, unlocked)
+                    vals = {}
+                    vals[1] = unlocked
+                    vals[2] = 0
+                    evo_talents[tname] = vals
+                end
+                falset.setTalentTypeMastery = function(self, tname, mastery)
+                    if not evo_talents[tname] then return end
+                    evo_talents[tname][2] = mastery - 1.0
+                end
+                falset.unlearnTalent = function(self, tname)
+                    if Actor.talents_types_def[tname] then
+                        tval = tname:split('/')[1] .. ' / ' .. Actor.talents_types_def[tname].name
+                        evo.removes[tname] = tval
+                    end
+                end
+                falset.knowTalentType = function() return true end
+                falset.learnTalent = function() return end
+                falset.__increased_talent_types = {}
+                falset.incHate = function() end
+                falset.incSteam = function() end
+
+                -- for fallen ... very hacky, but then again, the entire evolutions system is
+                if t.unlearnTalents then
+                    t.__realUnlearnTalents = t.unlearnTalents
+                    t.unlearnTalents = function(self, t, cats)
+		        for id, lvl in pairs(cats) do self:unlearnTalent(id) end
+                    end
+                end
+
+                t.on_learn(falset, t)
+
+                if t.unlearnTalents then
+                    t.unlearnTalents = t.__realUnlearnTalents
+                end
+
                 check_talents_types(evo_talents, false, evo.class_talents, evo.generic_talents)
                 table.insert(evo_list, evo)
             end
         end
+        game.party.hasMember = game.party.__realHasMember
 
         subclasses[sub.short_name] = {
             name = sub.name,

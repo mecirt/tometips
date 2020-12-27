@@ -68,6 +68,23 @@ function fillTalentAvailability(tome, category) {
                     }
                 });
             });
+
+            // evolutions
+            _.each(sub.evolutions, function(evo) {
+                _.each([ evo.class_talents, evo.generic_talents ], function(evo_talents_types) {
+                    _.each(evo_talents_types, function(value, key) {
+                        var desc;
+                        if (show[key]) {
+                            if (sub.class_short_name && evo.name) {
+                                evoclass = { class_short_name: sub.class_short_name, short_name: sub.short_name, name: evo.name };
+                                // No associated class = inaccessible subclass
+                                // (like Tutorial Adventurer)
+                                show[key].push(Handlebars.partials.talent_classes({ subclass: evoclass, value: value }));
+                            }
+                        }
+                    });
+                });
+            });
         });
 
         _.each(show, function(value, key) {
